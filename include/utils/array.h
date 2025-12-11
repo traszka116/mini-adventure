@@ -1,17 +1,40 @@
-#include <stddef.h>
-#include <stdlib.h>
-#include "safe.h"
-
 #ifndef ARRAY_H
 #define ARRAY_H
 
-#define ARRAY_DECL(name, type)                                            \
-    typedef struct                                                        \
-    {                                                                     \
-        size_t size;                                                      \
-        type values[];                                                    \
-    } name##_t;                                                           \
-                                                                          \
+#include <stddef.h>
+#include <stdlib.h>
+#include "utils/safe.h"
+
+#define ARRAY_DECL(name, type)                    \
+    typedef struct name                           \
+    {                                             \
+        size_t size;                              \
+        type values[];                            \
+    } name##_t;                                   \
+                                                  \
+    name##_t *name_##create(size_t size);         \
+    void name##_destroy(name##_t *array);         \
+    type name##_get(name##_t *array, size_t idx); \
+    void name##_set(name##_t *array, size_t idx, type val);
+
+#define DYN_ARRAY_DECL(name, type)                             \
+    typedef struct name                                        \
+    {                                                          \
+        size_t size, len;                                      \
+        type values[];                                         \
+    } name##_t;                                                \
+                                                               \
+    name##_t *name##_create(size_t size);                      \
+    void name##_destroy(name##_t *array);                      \
+    type name##_get(name##_t *array, size_t idx);              \
+    void name##_set(name##_t *array, size_t idx, type val);    \
+    type name##_pop(name##_t *array);                          \
+    void name##_push_no_resize(name##_t *array, type val);     \
+    name##_t *name##_resize(name##_t *array, size_t new_size); \
+    int name##_push(name##_t **array, type val);               \
+    type name##_remove(name##_t **array, type val);
+
+#define ARRAY_IMPL(name, type)                                            \
     name##_t *name_##create(size_t size)                                  \
     {                                                                     \
         name##_t *array = malloc(sizeof(name##_t) + sizeof(type) * size); \
@@ -31,24 +54,18 @@
     type name##_get(name##_t *array, size_t idx)                          \
     {                                                                     \
         if (idx >= array->size)                                           \
-            _panic("out of bounds array access");                          \
+            _panic("out of bounds array access");                         \
         return array->values[idx];                                        \
     }                                                                     \
                                                                           \
     void name##_set(name##_t *array, size_t idx, type val)                \
     {                                                                     \
         if (idx >= array->size)                                           \
-            _panic("out of bounds array access");                          \
+            _panic("out of bounds array access");                         \
         array->values[idx] = val;                                         \
     }
 
-#define DYN_ARRAY_DECL(name, type)                                                        \
-    typedef struct                                                                        \
-    {                                                                                     \
-        size_t size, len;                                                                 \
-        type values[];                                                                    \
-    } name##_t;                                                                           \
-                                                                                          \
+#define DYN_ARRAY_IMPL(name, type)                                                        \
     name##_t *name##_create(size_t size)                                                  \
     {                                                                                     \
         name##_t *array = malloc(sizeof(name##_t) + sizeof(type) * size);                 \
@@ -69,23 +86,23 @@
     type name##_get(name##_t *array, size_t idx)                                          \
     {                                                                                     \
         if (idx >= array->size)                                                           \
-            _panic("out of bounds array access");                                          \
+            _panic("out of bounds array access");                                         \
         if (idx >= array->len)                                                            \
-            _warning("reading undefined item");                                            \
+            _warning("reading undefined item");                                           \
         return array->values[idx];                                                        \
     }                                                                                     \
                                                                                           \
     void name##_set(name##_t *array, size_t idx, type val)                                \
     {                                                                                     \
         if (idx >= array->size)                                                           \
-            _panic("out of bounds array access");                                          \
+            _panic("out of bounds array access");                                         \
         array->values[idx] = val;                                                         \
     }                                                                                     \
                                                                                           \
     type name##_pop(name##_t *array)                                                      \
     {                                                                                     \
         if (array->len == 0)                                                              \
-            _panic("poping empty array");                                                  \
+            _panic("poping empty array");                                                 \
         type val = array->values[array->len];                                             \
         array->len--;                                                                     \
         return val;                                                                       \
@@ -94,7 +111,7 @@
     void name##_push_no_resize(name##_t *array, type val)                                 \
     {                                                                                     \
         if (array->len >= array->size)                                                    \
-            _panic("pushing to full array");                                               \
+            _panic("pushing to full array");                                              \
         array->values[array->len] = val;                                                  \
         array->len++;                                                                     \
     }                                                                                     \

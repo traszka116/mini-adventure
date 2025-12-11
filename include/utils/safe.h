@@ -1,33 +1,35 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #ifndef SAFE_H
 #define SAFE_H
+#include <stdbool.h>
 
-void _panic(char *msg)
-{
-#ifdef DDEBUG
-    fprintf(stderr, "Panic: %s", msg);
-    exit(-1);
-#endif
-}
+void _panic(char *msg);
 
-void _warning(char *msg)
-{
-#ifdef DDEBUG
-    fprintf(stderr, "Warning: %s", msg);
-#endif
-}
+void _warning(char *msg);
 
-void _assert(bool expr, char *str)
-{
-#ifdef DDEBUG
-    fprintf(stderr, "Assertion: %s", msg);
-    exit(-1);
-#endif
-}
+void _assert(bool expr, char *str, char *file, int line);
 
-#define PANIC(MSG) panic(MSG)
-#define WARN(MSG) warning(MSG)
-#define ASSERT(EXPR) _assert((EXPR), #EXPR)
+#define PANIC(MSG)   \
+    do               \
+    {                \
+        _panic(MSG); \
+    } while (0)
+
+#define WARN(MSG)      \
+    do                 \
+    {                  \
+        _warning(MSG); \
+    } while (0)
+
+#define ASSERT(EXPR)                                \
+    do                                              \
+    {                                               \
+        _assert((EXPR), #EXPR, __FILE__, __LINE__); \
+    } while (0)
+
+#define UNREACHABLE                      \
+    do                                   \
+    {                                    \
+        _panic("Reached unreachable\n"); \
+    } while (0)
+
 #endif

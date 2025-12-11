@@ -2,5 +2,5 @@
 #define FUNCTION_H
 
 #define FUNC_PTR(ret, name, args...) ret (*name)(args)
-
+#define PRIV static
 #endif
