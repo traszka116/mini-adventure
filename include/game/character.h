@@ -25,5 +25,6 @@ int characters_push(characters_t *, character_t);
 character_t characters_pop(characters_t *);
 
 void characters_remove(characters_t *, size_t);
+size_t characters_count(characters_t *characters);
 
 #endif

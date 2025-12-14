@@ -84,3 +84,8 @@ void characters_remove(characters_t *characters, size_t n)
     character_t character = characters_pop(characters);
     characters_set(characters, n, character);
 }
+
+size_t characters_count(characters_t *characters)
+{
+    return characters->positions->len;
+}
