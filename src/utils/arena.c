@@ -1,4 +1,4 @@
-#include "arena.h"
+#include "utils/arena.h"
 
 #include <stdlib.h>
 #include <string.h>

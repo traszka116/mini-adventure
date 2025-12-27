@@ -27,12 +27,13 @@
     name##_t *name##_create(size_t size);                      \
     void name##_destroy(name##_t *array);                      \
     type name##_get(name##_t *array, size_t idx);              \
+    type *name##_at(name##_t *array, size_t idx);              \
     void name##_set(name##_t *array, size_t idx, type val);    \
     type name##_pop(name##_t *array);                          \
     void name##_push_no_resize(name##_t *array, type val);     \
     name##_t *name##_resize(name##_t *array, size_t new_size); \
     int name##_push(name##_t **array, type val);               \
-    type name##_remove(name##_t **array, type val);
+    type name##_remove(name##_t **array, size_t idx);
 
 #define ARRAY_IMPL(name, type)                                            \
     name##_t *name_##create(size_t size)                                  \
@@ -92,6 +93,13 @@
         return array->values[idx];                                                        \
     }                                                                                     \
                                                                                           \
+    type *name##_at(name##_t *array, size_t idx)                                          \
+    {                                                                                     \
+        if (idx >= array->size)                                                           \
+            _panic("out of bounds array access");                                         \
+        return &array->values[idx];                                                       \
+    }                                                                                     \
+                                                                                          \
     void name##_set(name##_t *array, size_t idx, type val)                                \
     {                                                                                     \
         if (idx >= array->size)                                                           \
@@ -141,6 +149,13 @@
         }                                                                                 \
         name##_push_no_resize(*array, val);                                               \
         return 1;                                                                         \
+    }                                                                                     \
+                                                                                          \
+    type name##_remove(name##_t **array, size_t idx)                                      \
+    {                                                                                     \
+        type val = name##_pop(*array);                                                    \
+        name##_set(*array, idx, val);                                                     \
+        return val;                                                                       \
     }
 
 #endif

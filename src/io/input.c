@@ -1,5 +1,7 @@
 #include "io/input.h"
 #include <stdlib.h>
+#include <SDL3/SDL.h>
+#include <string.h>
 
 input_t input_create()
 {
@@ -54,6 +56,7 @@ void input_update(input_t *input)
     input->prev_right = input->curr_right;
     input->prev_x = input->curr_x;
     input->prev_y = input->curr_y;
+
     // pull in new state
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -72,4 +75,75 @@ void input_update(input_t *input)
     input->curr_left = left;
     input->curr_right = right;
     input->curr_middle = middle;
+}
+
+bool is_key_down(input_t *input, SDL_Keycode key)
+{
+    return input->keyboard_now[key];
+}
+bool is_key_pressed(input_t *input, SDL_Keycode key)
+{
+    return !input->keyboard_prev[key] && input->keyboard_now[key];
+}
+bool is_key_released(input_t *input, SDL_Keycode key)
+{
+    return input->keyboard_prev[key] && !input->keyboard_now[key];
+}
+
+bool is_button_down(input_t *input, Button_t button)
+{
+    bool now = false;
+    switch (button)
+    {
+    case BUTTON_LEFT:
+        now = input->curr_left;
+        break;
+    case BUTTON_MIDDLE:
+        now = input->curr_middle;
+        break;
+    case BUTTON_RIGHT:
+        now = input->curr_right;
+        break;
+    }
+    return now;
+}
+bool is_button_pressed(input_t *input, Button_t button)
+{
+    bool now = false, prev = false;
+    switch (button)
+    {
+    case BUTTON_LEFT:
+        now = input->curr_left;
+        prev = input->prev_left;
+        break;
+    case BUTTON_MIDDLE:
+        now = input->curr_middle;
+        prev = input->prev_middle;
+        break;
+    case BUTTON_RIGHT:
+        now = input->curr_right;
+        prev = input->prev_right;
+        break;
+    }
+    return !prev && now;
+}
+bool is_button_released(input_t *input, Button_t button)
+{
+    bool now = false, prev = false;
+    switch (button)
+    {
+    case BUTTON_LEFT:
+        now = input->curr_left;
+        prev = input->prev_left;
+        break;
+    case BUTTON_MIDDLE:
+        now = input->curr_middle;
+        prev = input->prev_middle;
+        break;
+    case BUTTON_RIGHT:
+        now = input->curr_right;
+        prev = input->prev_right;
+        break;
+    }
+    return prev && !now;
 }

@@ -1,44 +1,59 @@
-#include <iso646.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include <SDL3/SDL.h>
 
+#include <iso646.h>
 #include "utils/debug.h"
+#include "utils/safe.h"
 #include "io/graphics.h"
 #include "io/input.h"
 #include "core/engine.h"
 #include "game/character.h"
+#include "game/game.h"
+#include "io/texture.h"
+
+const int width = 800,
+          height = 600;
 
 int main(void)
 {
     ASSERT(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO));
 
-    engine_t engine = engine_create();
-
-    characters_t chars = characters_init(10);
-    character_t character = {
-        .position = {1, 1},
-        .velocity = {0, 0},
+    game_t game = {
+        .camera = {
+            .position = {0, 0},
+            .size = {width, height},
+        },
+        .characters = character_list_create(10),
     };
-    characters_push(&chars, character);
-    MARK;
 
-    size_t count = characters_count(&chars);
-    for (size_t i = 0; i < count; i++)
-    {
-        character_t c = characters_get(chars, i);
-        LOG_F("%d) %d %d, %d %d", i, c.position.x, c.position.y, c.velocity.x, c.velocity.y);
-    }
+    character_t character = {
+        .position = {0, 0},
+        .radius = 3.0f,
+        .velocity = {.5, 0},
+        .max_speed = 5.0f,
+        .acceleration = 4.0f,
+    };
+
+    character_list_push_no_resize(game.characters, character);
+
+    engine_t engine = engine_create("game", width, height, "texture.png");
 
     while (!engine.input.quit)
     {
         engine_read_input(&engine);
 
-        engine_render(&engine);
-    }
+        game_update(&game, &engine.input, engine.delta_time);
+        game_draw(&game, &(engine.commands));
 
-    characters_destroy(&chars);
+        engine_render(&engine);
+        engine_time_tick(&engine);
+    }
 
     engine_destroy(&engine);
 
     SDL_Quit();
+
     return 0;
 }

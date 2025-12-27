@@ -2,6 +2,13 @@
 #define INPUT_H
 #include <SDL3/SDL.h>
 
+typedef enum
+{
+    BUTTON_LEFT,
+    BUTTON_MIDDLE,
+    BUTTON_RIGHT
+} Button_t;
+
 typedef struct
 {
     const bool *keyboard_now;
@@ -21,5 +28,13 @@ typedef struct
 input_t input_create();
 void input_destroy(input_t *input);
 void input_update(input_t *input);
+
+bool is_key_down(input_t *, SDL_Keycode);
+bool is_key_pressed(input_t *, SDL_Keycode);
+bool is_key_released(input_t *, SDL_Keycode);
+
+bool is_button_down(input_t *, Button_t);
+bool is_button_pressed(input_t *, Button_t);
+bool is_button_released(input_t *, Button_t);
 
 #endif

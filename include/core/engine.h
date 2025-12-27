@@ -12,10 +12,19 @@ typedef struct
 
     // renderer command list
     command_list_t *commands;
+
+    // texture atlas
+    texture_t atlas;
+
+    // timer
+    uint64_t last_tick;
+    float delta_time;
 } engine_t;
 
-engine_t engine_create();
+engine_t engine_create(char *title, int width, int height, char* atlas);
 void engine_destroy(engine_t *engine);
 void engine_read_input(engine_t *engine);
 void engine_render(engine_t *engine);
+void engine_time_tick(engine_t *engine);
+
 #endif
