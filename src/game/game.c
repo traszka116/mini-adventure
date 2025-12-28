@@ -7,19 +7,19 @@
 
 void game_draw(game_t *game, command_list_t **commands)
 {
-    command_t present = {
+    static const command_t present = {
         .present = {
             .cmd = Graphic_PRESENT,
         },
     };
 
-    command_t clear = {
+    static const command_t clear = {
         .clear = {
             .cmd = Graphic_CLEAR,
         },
     };
 
-    command_t reset_color = {
+    static const command_t reset_color = {
         .set_color = {
             .cmd = Graphic_SET_COLOR,
             .r = .0,
@@ -32,31 +32,13 @@ void game_draw(game_t *game, command_list_t **commands)
     command_list_push(commands, reset_color);
     command_list_push(commands, clear);
 
+    
+
     for (size_t i = 0; i < game->characters->len; i++)
     {
-
-        vec2_t draw_pos = camera_coords(game->camera, character_list_get(game->characters, i).position);
-
-        command_t draw_tex = {
-            .texture = {
-                .cmd = Graphic_TEXTURE,
-                // source
-                .src_x = 0.0f,
-                .src_y = 0.0f,
-                .src_w = 100.0f,
-                .src_h = 100.0f,
-
-                // destination
-                .dst_x = draw_pos.x,
-                .dst_y = draw_pos.y,
-                .dst_w = 20.0f,
-                .dst_h = 20.0f,
-            },
-        };
-
-
-        command_list_push(commands, draw_tex);
+        
     }
+
     command_list_push(commands, present);
 }
 

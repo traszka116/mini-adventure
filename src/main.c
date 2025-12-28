@@ -12,6 +12,7 @@
 #include "game/character.h"
 #include "game/game.h"
 #include "io/texture.h"
+#include "game/player.h"
 
 const int width = 800,
           height = 600;
@@ -28,17 +29,14 @@ int main(void)
         .characters = character_list_create(10),
     };
 
-    character_t character = {
-        .position = {0, 0},
-        .radius = 3.0f,
-        .velocity = {.5, 0},
-        .max_speed = 5.0f,
-        .acceleration = 4.0f,
-    };
+    character_t character =
+        create_character((vec2_t){0, 0}, 10, 5, 4);
+
+    player_t player = {.character_id = character.id};
 
     character_list_push_no_resize(game.characters, character);
 
-    engine_t engine = engine_create("game", width, height, "texture.png");
+    engine_t engine = engine_create("game", width, height, "textures/atlas.png");
 
     while (!engine.input.quit)
     {

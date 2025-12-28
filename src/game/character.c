@@ -70,3 +70,20 @@ void character_move(character_t *character, float dt, float friction)
     character_translate(character);
     character_friction(character, friction, dt);
 }
+
+character_t create_character(vec2_t pos, float r, float max_v, float a)
+{
+    static size_t last_id = 0;
+    
+    character_t character = {
+        .position = pos,
+        .radius = r,
+        .velocity = {0, 0},
+        .max_speed = max_v,
+        .acceleration = a,
+    };
+
+    last_id++;
+
+    return character;
+}
