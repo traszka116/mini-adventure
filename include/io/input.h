@@ -7,7 +7,7 @@ typedef enum
     BUTTON_LEFT,
     BUTTON_MIDDLE,
     BUTTON_RIGHT
-} Button_t;
+} button_t;
 
 typedef struct
 {
@@ -33,8 +33,8 @@ bool is_key_down(input_t *, SDL_Keycode);
 bool is_key_pressed(input_t *, SDL_Keycode);
 bool is_key_released(input_t *, SDL_Keycode);
 
-bool is_button_down(input_t *, Button_t);
-bool is_button_pressed(input_t *, Button_t);
-bool is_button_released(input_t *, Button_t);
+bool is_button_down(input_t *, button_t);
+bool is_button_pressed(input_t *, button_t);
+bool is_button_released(input_t *, button_t);
 
 #endif

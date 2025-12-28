@@ -42,7 +42,7 @@ void graphic_destroy(graphic_t *graphic)
     }
 }
 
-PRIV void graphic_run_command(const graphic_t *graphic, texture_t atlas, command_t command)
+void graphic_run_command(const graphic_t *graphic, texture_t atlas, command_t command)
 {
     switch (command.cmd)
     {

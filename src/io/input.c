@@ -90,7 +90,7 @@ bool is_key_released(input_t *input, SDL_Keycode key)
     return input->keyboard_prev[key] && !input->keyboard_now[key];
 }
 
-bool is_button_down(input_t *input, Button_t button)
+bool is_button_down(input_t *input, button_t button)
 {
     bool now = false;
     switch (button)
@@ -107,7 +107,7 @@ bool is_button_down(input_t *input, Button_t button)
     }
     return now;
 }
-bool is_button_pressed(input_t *input, Button_t button)
+bool is_button_pressed(input_t *input, button_t button)
 {
     bool now = false, prev = false;
     switch (button)
@@ -127,7 +127,7 @@ bool is_button_pressed(input_t *input, Button_t button)
     }
     return !prev && now;
 }
-bool is_button_released(input_t *input, Button_t button)
+bool is_button_released(input_t *input, button_t button)
 {
     bool now = false, prev = false;
     switch (button)
