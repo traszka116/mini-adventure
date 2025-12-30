@@ -16,7 +16,7 @@ int main(void)
 
     graphic_t graphic = graphic_create("mini-adventure", 800, 600);
     input_t input = input_create();
-    timer_t timer = timer_create();
+    tick_t timer = timer_create();
 
     while (not input.quit)
     {

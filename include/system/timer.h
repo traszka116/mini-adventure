@@ -5,9 +5,10 @@
 typedef struct
 {
     Uint64 last_tick;
-} timer_t;
+} tick_t;
 
-timer_t timer_create();
-float timer_elapsed(timer_t *);
+
+tick_t timer_create();
+float timer_elapsed(tick_t *);
 
 #endif
