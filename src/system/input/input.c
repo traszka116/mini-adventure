@@ -1,4 +1,4 @@
-#include "io/input.h"
+#include "system/input.h"
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 #include <string.h>
@@ -77,73 +77,4 @@ void input_update(input_t *input)
     input->curr_middle = middle;
 }
 
-bool is_key_down(input_t *input, SDL_Keycode key)
-{
-    return input->keyboard_now[key];
-}
-bool is_key_pressed(input_t *input, SDL_Keycode key)
-{
-    return !input->keyboard_prev[key] && input->keyboard_now[key];
-}
-bool is_key_released(input_t *input, SDL_Keycode key)
-{
-    return input->keyboard_prev[key] && !input->keyboard_now[key];
-}
 
-bool is_button_down(input_t *input, button_t button)
-{
-    bool now = false;
-    switch (button)
-    {
-    case BUTTON_LEFT:
-        now = input->curr_left;
-        break;
-    case BUTTON_MIDDLE:
-        now = input->curr_middle;
-        break;
-    case BUTTON_RIGHT:
-        now = input->curr_right;
-        break;
-    }
-    return now;
-}
-bool is_button_pressed(input_t *input, button_t button)
-{
-    bool now = false, prev = false;
-    switch (button)
-    {
-    case BUTTON_LEFT:
-        now = input->curr_left;
-        prev = input->prev_left;
-        break;
-    case BUTTON_MIDDLE:
-        now = input->curr_middle;
-        prev = input->prev_middle;
-        break;
-    case BUTTON_RIGHT:
-        now = input->curr_right;
-        prev = input->prev_right;
-        break;
-    }
-    return !prev && now;
-}
-bool is_button_released(input_t *input, button_t button)
-{
-    bool now = false, prev = false;
-    switch (button)
-    {
-    case BUTTON_LEFT:
-        now = input->curr_left;
-        prev = input->prev_left;
-        break;
-    case BUTTON_MIDDLE:
-        now = input->curr_middle;
-        prev = input->prev_middle;
-        break;
-    case BUTTON_RIGHT:
-        now = input->curr_right;
-        prev = input->prev_right;
-        break;
-    }
-    return prev && !now;
-}

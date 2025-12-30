@@ -5,18 +5,6 @@
 #include <stdlib.h>
 #include "utils/safe.h"
 
-#define ARRAY_DECL(name, type)                    \
-    typedef struct name                           \
-    {                                             \
-        size_t size;                              \
-        type values[];                            \
-    } name##_t;                                   \
-                                                  \
-    name##_t *name_##create(size_t size);         \
-    void name##_destroy(name##_t *array);         \
-    type name##_get(name##_t *array, size_t idx); \
-    void name##_set(name##_t *array, size_t idx, type val);
-
 #define DYN_ARRAY_DECL(name, type)                             \
     typedef struct name                                        \
     {                                                          \
@@ -34,37 +22,6 @@
     name##_t *name##_resize(name##_t *array, size_t new_size); \
     int name##_push(name##_t **array, type val);               \
     type name##_remove(name##_t **array, size_t idx);
-
-#define ARRAY_IMPL(name, type)                                            \
-    name##_t *name_##create(size_t size)                                  \
-    {                                                                     \
-        name##_t *array = malloc(sizeof(name##_t) + sizeof(type) * size); \
-        if (!array)                                                       \
-            return NULL;                                                  \
-        array->size = size;                                               \
-        return array;                                                     \
-    }                                                                     \
-                                                                          \
-    void name##_destroy(name##_t *array)                                  \
-    {                                                                     \
-        if (!array)                                                       \
-            return;                                                       \
-        free(array);                                                      \
-    }                                                                     \
-                                                                          \
-    type name##_get(name##_t *array, size_t idx)                          \
-    {                                                                     \
-        if (idx >= array->size)                                           \
-            _panic("out of bounds array access");                         \
-        return array->values[idx];                                        \
-    }                                                                     \
-                                                                          \
-    void name##_set(name##_t *array, size_t idx, type val)                \
-    {                                                                     \
-        if (idx >= array->size)                                           \
-            _panic("out of bounds array access");                         \
-        array->values[idx] = val;                                         \
-    }
 
 #define DYN_ARRAY_IMPL(name, type)                                                        \
     name##_t *name##_create(size_t size)                                                  \

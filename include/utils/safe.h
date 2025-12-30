@@ -1,6 +1,7 @@
 #ifndef SAFE_H
 #define SAFE_H
 #include <stdbool.h>
+#include <stdio.h>
 
 void _panic(char *msg);
 
@@ -30,6 +31,29 @@ void _assert(bool expr, char *str, char *file, int line);
     do                                   \
     {                                    \
         _panic("Reached unreachable\n"); \
+    } while (0)
+
+#define MARK                                       \
+    do                                             \
+    {                                              \
+        printf("file: %s:%d", __FILE__, __LINE__); \
+        fflush(stdout);                            \
+    } while (0)
+
+#define LOG(msg)        \
+    do                  \
+    {                   \
+        MARK;           \
+        puts(msg);      \
+        fflush(stdout); \
+    } while (0)
+
+#define LOG_F(format, args...)                     \
+    do                                             \
+    {                                              \
+        printf("file: %s:%d", __FILE__, __LINE__); \
+        printf(format, args);                      \
+        fflush(stdout);                            \
     } while (0)
 
 #endif
