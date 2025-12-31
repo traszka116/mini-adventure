@@ -1,6 +1,7 @@
 #include "system/texture/texture.h"
 #include "stb_image.h"
 #include "utils/safe.h"
+#include <SDL3/SDL.h>
 
 texture_t texture_create(char *file, SDL_Renderer *renderer)
 {
@@ -10,7 +11,7 @@ texture_t texture_create(char *file, SDL_Renderer *renderer)
     ASSERT(pixels);
     tex.tex = SDL_CreateTexture(
         renderer,
-        SDL_PIXELFORMAT_RGBA8888,
+        SDL_PIXELFORMAT_RGBA32,
         SDL_TEXTUREACCESS_STREAMING,
         w, h);
     ASSERT(tex.tex);
@@ -18,6 +19,8 @@ texture_t texture_create(char *file, SDL_Renderer *renderer)
     stbi_image_free(pixels);
     tex.size.x = (uint16_t)(w);
     tex.size.y = (uint16_t)(h);
+    SDL_SetTextureScaleMode(tex.tex, SDL_SCALEMODE_NEAREST);
+
     return tex;
 }
 

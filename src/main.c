@@ -8,10 +8,12 @@
 #include "system/input.h"
 #include "system/graphic.h"
 #include "system/timer.h"
+#include "system/command.h"
+#include "system/texture/atlas.h"
 
 int main(void)
 {
-    /*
+
     ASSERT(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO));
 
     graphic_t graphic = graphic_create("mini-adventure", 800, 600);
@@ -23,14 +25,13 @@ int main(void)
         float dt = timer_elapsed(&timer);
         input_update(&input);
 
+        graphic_execute(&graphic);
     }
 
     input_destroy(&input);
     graphic_destroy(&graphic);
 
     SDL_Quit();
-    */
-
 
     return 0;
 }
