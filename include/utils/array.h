@@ -5,6 +5,13 @@
 #include <stdlib.h>
 #include "utils/safe.h"
 
+#define DYN_ARRAY_DECL_T(name, type) \
+    typedef struct name              \
+    {                                \
+        size_t size, len;            \
+        type values[];               \
+    } name##_t;
+
 #define DYN_ARRAY_DECL(name, type)                             \
     typedef struct name                                        \
     {                                                          \

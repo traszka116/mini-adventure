@@ -6,7 +6,7 @@
 #include "system/command.h"
 #include "utils/array.h"
 
-DYN_ARRAY_DECL(gcmd_list, graphic_cmd_t);
+DYN_ARRAY_DECL_T(gcmd_list, graphic_cmd_t);
 
 typedef struct
 {

@@ -29,7 +29,7 @@ typedef struct
     texture_t texture;
 } texture_res_t;
 
-DYN_ARRAY_DECL(buckets_texture, texture_res_t);
+DYN_ARRAY_DECL_T(buckets_texture, texture_res_t);
 
 typedef struct
 {
