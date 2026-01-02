@@ -1,5 +1,7 @@
 #include "engine/scene.h"
+#include "utils/array.h"
 #include "utils/safe.h"
+
 DYN_ARRAY_IMPL(scene_list, scene_t);
 
 scene_manager_t scene_manager_create(size_t cap, scene_t initial)
@@ -37,17 +39,18 @@ bool scene_manager_select(scene_manager_t *manager, const char *name)
         {
             // close old scene
             scene_t *old = scene_list_at(manager->scenes, manager->active_scene_idx);
-            old->onExit(old);
+            if (old->onExit)
+                old->onExit(old);
 
             // load if not loaded
-            if (!scene->loaded)
-            {
+            if (!scene->loaded && scene->load)
                 scene->load(scene);
-                scene->loaded = true;
-            }
+
+            scene->loaded = true;
 
             // enter scene
-            scene->onEntry(scene);
+            if (scene->onEntry)
+                scene->onEntry(scene);
             manager->active_scene_idx = i;
 
             return true;
@@ -62,7 +65,7 @@ scene_t scene_manager_active(scene_manager_t *manager)
     return scene_list_get(manager->scenes, manager->active_scene_idx);
 }
 
-bool scene_manager_load(scene_manager_t *manager, const char *name)
+void scene_manager_load(scene_manager_t *manager, const char *name)
 {
     size_t count = manager->scenes->len;
     for (size_t i = 0; i < count; i++)
@@ -75,21 +78,20 @@ bool scene_manager_load(scene_manager_t *manager, const char *name)
             old->onExit(old);
 
             // load if not loaded
-            if (!scene->loaded)
+            if (!scene->loaded && scene->load)
                 scene->load(scene);
+            scene->loaded = true;
 
             // enter scene
             scene->onEntry(scene);
             manager->active_scene_idx = i;
 
-            return true;
+            return;
         }
     }
-
-    return false;
 }
 
-bool scene_manager_unload(scene_manager_t *manager, const char *name)
+void scene_manager_unload(scene_manager_t *manager, const char *name)
 {
 
     size_t count = manager->scenes->len;
@@ -98,15 +100,12 @@ bool scene_manager_unload(scene_manager_t *manager, const char *name)
         scene_t *scene = scene_list_at(manager->scenes, i);
         if (strncmp(scene->name, name, NAME_LEN) == 0)
         {
-            if (!scene->loaded)
-            {
+            if (!scene->loaded && scene->unload)
                 scene->unload(scene);
-                scene->loaded = false;
-            }
 
-            return true;
+            scene->loaded = false;
+
+            return;
         }
     }
-
-    return false;
 }

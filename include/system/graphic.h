@@ -17,7 +17,7 @@ typedef struct
     int w, h;
 } graphic_t;
 
-graphic_t graphic_create(char *name, int h, int w);
+graphic_t graphic_create(char *name, int w, int h);
 void graphic_destroy(graphic_t *);
 
 void graphic_add_command(graphic_t *, graphic_cmd_t);

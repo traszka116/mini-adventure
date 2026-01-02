@@ -8,7 +8,7 @@ typedef struct
 } tick_t;
 
 
-tick_t timer_create();
-float timer_elapsed(tick_t *);
+tick_t tick_create();
+float tick_elapsed(tick_t *);
 
 #endif

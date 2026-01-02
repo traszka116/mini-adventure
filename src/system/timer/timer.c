@@ -1,14 +1,14 @@
 #include "system/timer.h"
 #include <SDL3/SDL.h>
 
-tick_t timer_create()
+tick_t tick_create()
 {
     return (tick_t){
         .last_tick = SDL_GetTicks(),
     };
 }
 
-float timer_elapsed(tick_t *timer)
+float tick_elapsed(tick_t *timer)
 {
     Uint64 last = timer->last_tick;
     Uint64 now = SDL_GetTicks();
