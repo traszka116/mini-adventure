@@ -3,34 +3,53 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-void _panic(char *msg);
+static inline void _panic(const char *message, const char *file, int line) {
+    fprintf(stderr, "\n=== PANIC ===\n");
+    fprintf(stderr, "File: %s\n", file);
+    fprintf(stderr, "Line: %d\n", line);
+    fprintf(stderr, "Message: %s\n", message);
+    fflush(stderr);
+    exit(EXIT_FAILURE);
+}
 
-void _warning(char *msg);
+static inline void _panic_fmt(const char* file, int line, 
+                             const char* fmt, va_list args) {
+    fprintf(stderr, "\n[FATAL] %s:%d: ", file, line);
+    
+    if (fmt) {
+        vfprintf(stderr, fmt, args);
+    }
+    
+    fprintf(stderr, "\n");
+    fflush(stderr);
+    exit(EXIT_FAILURE);
+}
 
-void _assert(bool expr, char *str, char *file, int line);
-
-#define PANIC(MSG)   \
-    do               \
-    {                \
-        _panic(MSG); \
+#define REQUIRE_F(expr, fmt, ...) \
+    do { \
+        if (!(expr)) { \
+            va_list args; \
+            va_start(args, fmt); \
+            _panic_fmt(__FILE__, __LINE__, fmt, args); \
+            va_end(args); \
+        } \
     } while (0)
 
-#define WARN(MSG)      \
-    do                 \
-    {                  \
-        _warning(MSG); \
-    } while (0)
+#define REQUIRE(expr) \
+    REQUIRE_F(expr, "Requirement failed: %s", #expr)
 
-#define ASSERT(EXPR)                                \
-    do                                              \
-    {                                               \
-        _assert((EXPR), #EXPR, __FILE__, __LINE__); \
+
+#define ASSERT(EXPR)                                    \
+    do                                                  \
+    {                                                   \
+        if (!EXPR)                                      \
+            _panic(#EXPR, __FILE__, __LINE__); \
     } while (0)
 
 #define UNREACHABLE                      \
     do                                   \
     {                                    \
-        _panic("Reached unreachable\n"); \
+        _panic("Reached unreachable\n", __FILE__, __LINE__); \
     } while (0)
 
 #define MARK                                       \
@@ -40,20 +59,11 @@ void _assert(bool expr, char *str, char *file, int line);
         fflush(stdout);                            \
     } while (0)
 
-#define LOG(msg)        \
-    do                  \
-    {                   \
-        MARK;           \
-        puts(msg);      \
+#define LOG_F(fmt, ...) \
+    do { \
+        fprintf(stdout, "[LOG] %s:%d: " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
         fflush(stdout); \
     } while (0)
 
-#define LOG_F(format, args...)                     \
-    do                                             \
-    {                                              \
-        printf("file: %s:%d", __FILE__, __LINE__); \
-        printf(format, args);                      \
-        fflush(stdout);                            \
-    } while (0)
 
 #endif
